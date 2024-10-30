@@ -52,60 +52,34 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    // const fetchPostersAndProviders = async () => {
-    //   const newPosters = {};
-    //   const newProviders = {};
-    //   setLoading(true);
-    //   const controller = new AbortController();
-    //   for (const movie of movies) {
-    //     try {
-    //       const response = await axios.get(
-    //         `https://api.themoviedb.org/3/movie/${movie.movie_id}?api_key=${API_KEY}&language=en-US`,
-    //         { signal: controller.signal }
-    //       );
-    //       newPosters[movie.movie_id] = `https://image.tmdb.org/t/p/w500/${response.data.poster_path}`;
-
-    //       const providersResponse = await axios.get(
-    //         `https://api.themoviedb.org/3/movie/${movie.movie_id}/watch/providers?api_key=${API_KEY}`,
-    //         { signal: controller.signal }
-    //       );
-    //       newProviders[movie.movie_id] = providersResponse.data.results?.US?.flatrate?.[0]?.provider_name || "N/A";
-    //     } catch (error) {
-    //       console.error("Error fetching poster or provider:", error);
-    //     }
-    //   }
-    //   setPosters(newPosters);
-    //   setProviders(newProviders);
-    //   setLoading(false);
-    //   return () => controller.abort();
-    // };
-
     const fetchPostersAndProviders = async () => {
       const newPosters = {};
       const newProviders = {};
+      setLoading(true);
       const controller = new AbortController();
-    
-      try {
-        setLoading(true);
-        await Promise.all(movies.map(async (movie) => {
-          const response = await axios.get(`https://api.themoviedb.org/3/movie/${movie.movie_id}?api_key=${API_KEY}&language=en-US`, { signal: controller.signal });
+      for (const movie of movies) {
+        try {
+          const response = await axios.get(
+            `https://api.themoviedb.org/3/movie/${movie.movie_id}?api_key=${API_KEY}&language=en-US`,
+            { signal: controller.signal }
+          );
           newPosters[movie.movie_id] = `https://image.tmdb.org/t/p/w500/${response.data.poster_path}`;
-    
-          const providersResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movie.movie_id}/watch/providers?api_key=${API_KEY}`, { signal: controller.signal });
+
+          const providersResponse = await axios.get(
+            `https://api.themoviedb.org/3/movie/${movie.movie_id}/watch/providers?api_key=${API_KEY}`,
+            { signal: controller.signal }
+          );
           newProviders[movie.movie_id] = providersResponse.data.results?.US?.flatrate?.[0]?.provider_name || "N/A";
-        }));
-        
-        setPosters(newPosters);
-        setProviders(newProviders);
-      } catch (error) {
-        console.error("Error fetching poster or provider:", error);
-      } finally {
-        setLoading(false);
+        } catch (error) {
+          console.error("Error fetching poster or provider:", error);
+        }
       }
-      
+      setPosters(newPosters);
+      setProviders(newProviders);
+      setLoading(false);
       return () => controller.abort();
     };
-    
+
 
     if (movies.length > 0) {
       fetchPostersAndProviders();
