@@ -8,7 +8,7 @@ import { BeatLoader } from 'react-spinners';
 
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""; 
-const API_KEY = import.meta.env.VITE_API_KEY;
+const API_KEY = import.meta.env.VITE_API_KEY || "195e3d35294310616a256eced2eb9520";
 
 const App = () => {
   let xPercent = 0; 
